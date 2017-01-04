@@ -1,0 +1,21 @@
+body {
+  width:100%;
+  height:100%;
+  margin:0 auto;
+  text-align:center;
+  font-family:sans-serif;
+}
+
+h2, h3, h3 {
+  font-weight:normal;
+}
+
+.scatterplot-graph {
+  background:#fff;
+  box-shadow:8px 8px 5px #ccc;
+}
+
+.axis text {
+  font: 14px sans-serif;
+  fill:#000;
+}

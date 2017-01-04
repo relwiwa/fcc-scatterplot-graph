@@ -1,0 +1,28 @@
+{
+  "name": "fcc-scatterplot-graph",
+  "version": "1.0.0",
+  "description": "D3 Scatterplot Graph project for FreeCodeCamp's Data Visualization Certification",
+  "main": "gulpfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/relwiwa/fcc-scatterplot-graph.git"
+  },
+  "author": "Walter",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/relwiwa/fcc-scatterplot-graph/issues"
+  },
+  "homepage": "https://github.com/relwiwa/fcc-scatterplot-graph#readme",
+  "devDependencies": {
+    "browser-sync": "^2.18.5",
+    "gulp": "^3.9.1",
+    "gulp-autoprefixer": "^3.1.1",
+    "gulp-clean-css": "^2.3.2",
+    "gulp-concat": "^2.6.1",
+    "gulp-htmlmin": "^3.0.0",
+    "gulp-uglify": "^2.0.0"
+  }
+}
