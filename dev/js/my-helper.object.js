@@ -36,7 +36,7 @@ MyHelper.prototype.calcMinSecAbsDiff = function(string1, string2) {
   var date2 = this.createMinSecDate(string2);
   var diff = Math.abs(date1.getTime() - date2.getTime());
   var diffSecs = diff / 1000;
-  var diffMins = diffSecs/60;
+  var diffMins = Math.floor(diffSecs/60);
   diffSecs = diffSecs % 60;
   return [diffMins, diffSecs];
 }

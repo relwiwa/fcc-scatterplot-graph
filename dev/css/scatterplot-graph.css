@@ -19,3 +19,13 @@ h2, h3, h3 {
   font: 14px sans-serif;
   fill:#000;
 }
+
+.dope {
+  fill:#c2a5cf;
+  stroke:#7b3294;
+}
+
+.no-dope {
+  fill:#a6dba0;
+  stroke:#008837;
+}

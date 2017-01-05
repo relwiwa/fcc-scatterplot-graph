@@ -35,10 +35,10 @@ MyScatterplotGraph.prototype.createChart = function() {
 MyScatterplotGraph.prototype.addYAxis = function() {
 	this.chart.y = d3.scaleLinear()
 		.range([this.props.height, 0])
-		.domain([1, this.data.json.length]);
+		.domain([this.data.json.length + 2, 1]);
 
 	var yAxis = d3.axisLeft(this.chart.y)
-		.ticks(12)
+		.ticks(10)
 		.tickSizeOuter(0);
 
 	this.chart.svg.append('g')
@@ -60,13 +60,13 @@ MyScatterplotGraph.prototype.addXAxis = function() {
 		return d['Time'];
 	});
 	this.data.timeInterval = this.helper.calcMinSecAbsDiff(this.data.fastestTime, this.data.slowestTime);
-
+	this.data.timeInterval[1] += 15;
 	this.chart.x = d3.scaleTime()
 		.range([0, this.props.width])
-		.domain([this.helper.createMinSecDate('00:00').getTime(), this.helper.createMinSecDate(this.data.timeInterval).getTime()]);
+		.domain([this.helper.createMinSecDate(this.data.timeInterval).getTime(),this.helper.createMinSecDate('00:00').getTime()]);
 
 	var xAxis = d3.axisBottom(this.chart.x)
-		.tickFormat(d3.timeFormat('%M:%S'))
+		.tickFormat(d3.timeFormat(this.props.formats.minSecs))
 		.tickSizeOuter(0)
 		.ticks(10);
 
@@ -78,4 +78,30 @@ MyScatterplotGraph.prototype.addXAxis = function() {
 			.attr('transform', 'translate(' + this.props.width + ', -15)')
 			.style('text-anchor', 'end')
 			.text('Difference to Fastest Time'); 
+}
+
+MyScatterplotGraph.prototype.addCircles = function() {
+	var that = this;
+	this.chart.svg.selectAll('.scatter')
+		.data(this.data.json, function(d) {
+			var diff = that.helper.calcMinSecAbsDiff(that.data.fastestTime, d['Time'])
+			d['Diff'] = that.helper.createMinSecDate(diff);
+		})
+		.enter()
+		.append('circle')
+			.attr('class', function(d) {
+				if (d['Doping'] !== '') {
+					return 'dope'
+				}
+				else {
+					return 'no-dope'
+				}
+			})
+			.attr('r', '7')
+			.attr('cx', function(d) {
+				return that.chart.x(d['Diff'].getTime());
+			})
+			.attr('cy', function(d) {
+				return that.chart.y(d['Place']);
+			});
 }

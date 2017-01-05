@@ -12,6 +12,7 @@ function MyBikeRaceDoping() {
 			this.scatterplotGraph.createChart();
 			this.scatterplotGraph.addYAxis();
 			this.scatterplotGraph.addXAxis();
+			this.scatterplotGraph.addCircles();
 		}
 	});
 }
