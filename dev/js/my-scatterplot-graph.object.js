@@ -1,6 +1,7 @@
-function MyScatterplotGraph(data) {
+function MyScatterplotGraph(json) {
 	this.chart = {};
-	this.data = data;
+	this.data = {};
+	this.data.json = json;
 	this.helper = new MyHelper();
 
 	// SVG properties
@@ -16,6 +17,7 @@ function MyScatterplotGraph(data) {
 
 	// D3 data formatting properties
 	this.props.formats = {
+		minSecs: '%M:%S'
 	};
 }
 
@@ -33,7 +35,7 @@ MyScatterplotGraph.prototype.createChart = function() {
 MyScatterplotGraph.prototype.addYAxis = function() {
 	this.chart.y = d3.scaleLinear()
 		.range([this.props.height, 0])
-		.domain([this.data.length, 1]);
+		.domain([1, this.data.json.length]);
 
 	var yAxis = d3.axisLeft(this.chart.y)
 		.ticks(12)
@@ -48,4 +50,32 @@ MyScatterplotGraph.prototype.addYAxis = function() {
 			.attr('dy', '.71em')
 			.style('text-anchor', 'end')
 			.text('Rank');
+}
+
+MyScatterplotGraph.prototype.addXAxis = function() {
+	this.data.fastestTime = d3.min(this.data.json, function(d) {
+		return d['Time'];
+	});
+	this.data.slowestTime = d3.max(this.data.json, function(d) {
+		return d['Time'];
+	});
+	this.data.timeInterval = this.helper.calcMinSecAbsDiff(this.data.fastestTime, this.data.slowestTime);
+
+	this.chart.x = d3.scaleTime()
+		.range([0, this.props.width])
+		.domain([this.helper.createMinSecDate('00:00').getTime(), this.helper.createMinSecDate(this.data.timeInterval).getTime()]);
+
+	var xAxis = d3.axisBottom(this.chart.x)
+		.tickFormat(d3.timeFormat('%M:%S'))
+		.tickSizeOuter(0)
+		.ticks(10);
+
+	this.chart.svg.append('g')
+		.attr('class', 'x axis')
+		.attr('transform', 'translate(0,' + this.props.height + ')')
+		.call(xAxis)
+		.append('text')
+			.attr('transform', 'translate(' + this.props.width + ', -15)')
+			.style('text-anchor', 'end')
+			.text('Difference to Fastest Time'); 
 }
