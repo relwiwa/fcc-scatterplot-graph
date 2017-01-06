@@ -25,7 +25,37 @@ h2, h3, h3 {
   stroke:#7b3294;
 }
 
+.dope-selected {
+  fill:#7b3294;
+}
+
 .no-dope {
   fill:#a6dba0;
   stroke:#008837;
+}
+
+.no-dope-selected {
+  fill:#008837;
+}
+
+.tooltip {
+  width:250px;
+  border-radius:10px;
+  position:absolute;
+  pointer-events:none;
+  display:none;
+}
+
+.tooltip-dope {
+  background: #c2a5cf;
+  border:1px solid #7b3294;
+}
+
+.tooltip-no-dope {
+  background:#a6dba0;
+  border:1px solid #008837;
+}
+
+.tooltip p, .tooltip h4 {
+  padding:0 10px;
 }

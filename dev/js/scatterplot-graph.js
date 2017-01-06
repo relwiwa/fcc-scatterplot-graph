@@ -14,6 +14,7 @@ function MyBikeRaceDoping() {
 			this.scatterplotGraph.addYAxis();
 			this.scatterplotGraph.addXAxis();
 			this.scatterplotGraph.addCircles();
+			this.scatterplotGraph.addTooltipsAndHoverEffect();
 		}
 	});
 }
@@ -165,4 +166,76 @@ MyScatterplotGraph.prototype.addCircles = function() {
 			.attr('cy', function(d) {
 				return that.chart.y(d['Place']);
 			});
+}
+
+MyScatterplotGraph.prototype.addTooltipsAndHoverEffect = function() {
+	var that = this;
+	this.chart.tooltip = d3.select('body')
+	.insert('div', ':first-child')
+		.attr('class', 'tooltip');
+
+	d3.selectAll('circle')
+	.on('mouseover', function(d, i, data) {
+
+		// Hover effect
+		d3.select(this)
+			.attr('class', function(d) {
+				if (d3.select(this).attr('class') === 'dope') {
+					return 'dope-selected';
+				}
+				else {
+					return 'no-dope-selected';
+				}
+			});
+
+		// Tooltip placement
+		var xCoord = d3.event.pageX + 20;
+		var yCoord = d3.event.pageY - 20;
+		if (yCoord > 480) {
+			yCoord -= 100;
+		}
+		if (data[i]['cx']['baseVal']['value'] > 770) {
+			var diff = that.props.width + that.props.margin.left + that.props.margin.right - data[i]['cx']['baseVal']['value'];
+			xCoord -= 320 - diff;
+			yCoord += 50;
+		}
+
+		var html = '<h4>' + d['Name'] + ' (' + d['Nationality'] + ')</h4>';
+		html += '<p>Time: 0:' + d['Time'] + ' (' + d['Year'] + ')';
+		html += '<p>' + (d['Doping'] === '' ? 'No doping allegations' : d['Doping']) + '</p>';
+		
+		that.chart.tooltip
+			.attr('class', function() {
+				if (d['Doping'] === '') {
+					return 'tooltip tooltip-no-dope'
+				}
+				else {
+					return 'tooltip tooltip-dope'
+				}
+			})
+			.html(html)
+			.style('left', xCoord + 'px')
+			.style('top', yCoord + 'px')
+			.style('display', 'block');
+	})
+	.on('mouseleave', function(d) {
+		// Undo hover effect		
+		d3.select(this)
+			.attr('class', function(d) {
+				if (d3.select(this).attr('class') === 'dope-selected') {
+					return 'dope';
+				}
+				else {
+					return 'no-dope';
+				}
+			});
+
+		// Hide tooltip
+		that.chart.tooltip
+			.style('display', 'none');
+	});
+}
+
+MyScatterplotGraph.prototype.addHoverEffect = function() {
+	var that = this;
 }
