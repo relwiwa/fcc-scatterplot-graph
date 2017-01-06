@@ -17,7 +17,8 @@ function MyScatterplotGraph(json) {
 
 	// D3 data formatting properties
 	this.props.formats = {
-		minSecs: '%M:%S'
+		minSecs: '%M:%S',
+		dopedPercentage: '.0%'
 	};
 }
 
@@ -89,14 +90,6 @@ MyScatterplotGraph.prototype.addCircles = function() {
 		})
 		.enter()
 		.append('circle')
-			.attr('class', function(d) {
-				if (d['Doping'] !== '') {
-					return 'dope'
-				}
-				else {
-					return 'no-dope'
-				}
-			})
 			.attr('r', '7')
 			.attr('cx', function(d) {
 				return that.chart.x(d['Diff'].getTime());
@@ -106,7 +99,78 @@ MyScatterplotGraph.prototype.addCircles = function() {
 			});
 }
 
-MyScatterplotGraph.prototype.addTooltipsAndHoverEffect = function() {
+MyScatterplotGraph.prototype.setupBackgroundText = function() {
+	var that = this;
+	this.chart.bgText = this.chart.svg
+		.append('g')
+			.attr('class', 'bg-text')
+			.attr('transform', 'translate(' + this.props.width / 2.5  + ',' + this.props.height / 1.7 + ')');
+
+	this.chart.bgText.append('text')
+		.attr('class', 'bg-text-headline');
+	this.chart.bgText.append('text')
+		.attr('class', 'bg-text-question')
+		.attr('y', 60);
+	this.chart.bgText.append('text')
+		.attr('class', 'bg-text-answer')
+		.attr('y', 120);
+}
+
+MyScatterplotGraph.prototype.setupAuthorDrivenNarrative = function() {
+	var that = this;
+	var dopedCounter = 0;
+	var authorDrivenTimeout = null;
+
+	d3.select('.bg-text-headline')
+		.text('35 Fastest Times up Alpe D\'Huez');
+	d3.selectAll('circle')
+		.transition()
+		.delay(function(d, i) {
+			return i * 200;
+		})
+		.style('opacity', 1)
+		.on('end', function(d, i) {
+			if (i === 34) {
+				authorDrivenTimeout = window.setTimeout(function() {
+					d3.select('.bg-text-question')
+					.text('Performed by Cyclist with Doping Allegations:');
+					d3.selectAll('circle')
+						.transition()
+						.duration(1000)
+						.delay(function(d, i) {
+							return 400 * i;
+						})
+						.attr('class', function(d) {
+							if (d['Doping'] !== '') {
+								return 'dope'
+							}
+							else {
+								return 'no-dope'
+							}
+						})
+						.style('opacity', 1)
+						.on('start', function(d) {
+							if (d['Doping'] !== '') {
+								dopedCounter++;
+								d3.select('.bg-text-answer')
+									.text(d3.format(that.props.formats.dopedPercentage)(dopedCounter / 35));
+							}
+						})
+						.on('end', function(d, i) {
+							if (i === 34) {
+								window.clearTimeout(authorDrivenTimeout);
+								authorDrivenTimeout = null;
+								d3.select('.bg-text')
+									.style('display', 'none');
+								that.startUserDrivenNarrative();
+							}
+						});
+				}, 2000);
+			}
+		});
+}
+
+MyScatterplotGraph.prototype.startUserDrivenNarrative = function() {
 	var that = this;
 	this.chart.tooltip = d3.select('body')
 	.insert('div', ':first-child')
@@ -172,8 +236,4 @@ MyScatterplotGraph.prototype.addTooltipsAndHoverEffect = function() {
 		that.chart.tooltip
 			.style('display', 'none');
 	});
-}
-
-MyScatterplotGraph.prototype.addHoverEffect = function() {
-	var that = this;
 }

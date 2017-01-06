@@ -20,21 +20,27 @@ h2, h3, h3 {
   fill:#000;
 }
 
-.dope {
-  fill:#c2a5cf;
-  stroke:#7b3294;
-}
-
-.dope-selected {
-  fill:#7b3294;
-}
-
-.no-dope {
+circle {
+  opacity: 0;
   fill:#a6dba0;
   stroke:#008837;
 }
 
-.no-dope-selected {
+circle.dope {
+  fill:#c2a5cf;
+  stroke:#7b3294;
+}
+
+circle.dope-selected {
+  fill:#7b3294;
+}
+
+circle.no-dope {
+  fill:#a6dba0;
+  stroke:#008837;
+}
+
+circle.no-dope-selected {
   fill:#008837;
 }
 
@@ -58,4 +64,16 @@ h2, h3, h3 {
 
 .tooltip p, .tooltip h4 {
   padding:0 10px;
+}
+
+.bg-text {
+  fill:#000;
+}
+
+.bg-text-headline, .bg-text-answer {
+  font-size:40px;
+}
+
+.bg-text-question {
+  font-size:26px;
 }
