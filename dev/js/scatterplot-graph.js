@@ -147,7 +147,7 @@ MyScatterplotGraph.prototype.addXAxis = function() {
 MyScatterplotGraph.prototype.addCircles = function() {
 	var that = this;
 	this.chart.svg.selectAll('.scatter')
-		.data(this.data.json, function(d) {
+		.data(this.data.json, function(d, i, data) {
 			var diff = that.helper.calcMinSecAbsDiff(that.data.fastestTime, d['Time'])
 			d['Diff'] = that.helper.createMinSecDate(diff);
 		})
@@ -186,12 +186,21 @@ MyScatterplotGraph.prototype.setupAuthorDrivenNarrative = function() {
 
 	d3.select('.bg-text-headline')
 		.text('35 Fastest Times up Alpe D\'Huez');
+	d3.select('.bg-text-question')
+		.text('Normalized to 13.8 km distance');
 	d3.selectAll('circle')
+		.sort(function(a, b) {
+			return b['Place'] - a['Place'];
+		})
 		.transition()
 		.delay(function(d, i) {
-			return i * 200;
+			return i * 400;
 		})
 		.style('opacity', 1)
+		.on('start', function(d) {
+			d3.select('.bg-text-answer')
+				.text(d['Time']);
+		})
 		.on('end', function(d, i) {
 			if (i === 34) {
 				authorDrivenTimeout = window.setTimeout(function() {
@@ -222,13 +231,32 @@ MyScatterplotGraph.prototype.setupAuthorDrivenNarrative = function() {
 						.on('end', function(d, i) {
 							if (i === 34) {
 								window.clearTimeout(authorDrivenTimeout);
-								authorDrivenTimeout = null;
-								d3.select('.bg-text')
-									.style('display', 'none');
-								that.startUserDrivenNarrative();
+								authorDrivenTimeout = window.setTimeout(function() {
+									d3.selectAll('circle.dope, circle.no-dope')
+										.style('opacity', 0);
+									d3.selectAll('circle')
+										.filter(':nth-child(35), :nth-child(22)')
+										.style('opacity', 1);
+									d3.select('.bg-text-question')
+										.text('Fastest Time with Doping Allegations vs. without:');
+									d3.select('.bg-text-answer')
+										.text(that.data.json[0]['Time'] + ' vs. ' + that.data.json[15]['Time'])
+									window.clearTimeout(authorDrivenTimeout);
+									authorDrivenTimeout = window.setTimeout(function() {
+										window.clearTimeout(authorDrivenTimeout);
+										authorDrivenTimeout = null;
+										d3.select('.bg-text-question')
+											.text('Normalized to 13.8 km distance')
+										d3.select('.bg-text-answer')
+											.style('display', 'none');
+										d3.selectAll('circle.dope, circle.no-dope')
+											.style('opacity', 1);
+										that.startUserDrivenNarrative();
+									}, 5000);
+								}, 3000);
 							}
 						});
-				}, 2000);
+				}, 3000);
 			}
 		});
 }
