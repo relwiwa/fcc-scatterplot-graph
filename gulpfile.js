@@ -6,6 +6,8 @@ var gulp = require('gulp');
 var htmlmin = require('gulp-htmlmin');
 var uglify = require('gulp-uglify');
 
+var jsFiles = ['dev/js/helper.object.js', 'dev/js/scatterplot-graph.object.js', 'dev/js/bike-race-doping.object.js', 'dev/js/bike-race-doping.app.js'];
+
 gulp.task('default', ['update-html', 'update-scripts', 'update-css'], function() {
   gulp.watch('dev/**/*.html', ['update-html']);
   gulp.watch('dev/js/**/*.js', ['update-scripts']);
@@ -25,7 +27,7 @@ gulp.task('update-html', function() {
 });
 
 gulp.task('update-scripts', function() {
-  gulp.src(['dev/js/**/*.js', '!dev/js/scatterplot-graph.js'])
+  gulp.src(jsFiles)
     .pipe(concat('scatterplot-graph.js'))
     .pipe(gulp.dest('dev/js'))
     .pipe(browserSync.stream());
@@ -63,7 +65,7 @@ gulp.task('to-dist-css', function() {
 });
 
 gulp.task('to-dist-js', function() {
-  gulp.src(['dev/js/**/*.js', '!dev/js/scatterplot-graph.js'])
+  gulp.src(jsFiles)
     .pipe(concat('scatterplot-graph.js'))
     .pipe(uglify())
     .pipe(gulp.dest('dist/js'));

@@ -1,6 +1,6 @@
 function MyBikeRaceDoping() {
 	this.data = null;
-	this.scatterplot = null;
+	this.scatterplotGraph = null;
 	
 	d3.json('https://raw.githubusercontent.com/FreeCodeCamp/ProjectReferenceData/master/cyclist-data.json', function(error, json) {
 		if (error) {

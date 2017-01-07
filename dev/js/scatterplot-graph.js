@@ -1,24 +1,3 @@
-var bikeRaceDoping = new MyBikeRaceDoping();
-function MyBikeRaceDoping() {
-	this.data = null;
-	this.scatterplot = null;
-	
-	d3.json('https://raw.githubusercontent.com/FreeCodeCamp/ProjectReferenceData/master/cyclist-data.json', function(error, json) {
-		if (error) {
-			console.error('Error happened reading JSON data');
-		}
-		else {
-			this.data = json;
-			this.scatterplotGraph = new MyScatterplotGraph(this.data);
-			this.scatterplotGraph.createChart();
-			this.scatterplotGraph.addYAxis();
-			this.scatterplotGraph.addXAxis();
-			this.scatterplotGraph.addCircles();
-			this.scatterplotGraph.setupBackgroundText();
-			this.scatterplotGraph.setupAuthorDrivenNarrative();
-		}
-	});
-}
 function MyHelper() { }
 
 /*  createMinSecDate function
@@ -294,7 +273,9 @@ MyScatterplotGraph.prototype.startUserDrivenNarrative = function() {
 		}
 
 		var html = '<h4>' + d['Name'] + ' (' + d['Nationality'] + ')</h4>';
-		html += '<p>Time: 0:' + d['Time'] + ' (' + d['Year'] + ')';
+		html += '<p>Rank: ' + d['Place'] + '<br>';
+		html += 'Time: 0:' + d['Time'] + '<br>';
+		html += 'Year: ' + d['Year'];
 		html += '<p>' + (d['Doping'] === '' ? 'No doping allegations' : d['Doping']) + '</p>';
 		
 		that.chart.tooltip
@@ -328,3 +309,24 @@ MyScatterplotGraph.prototype.startUserDrivenNarrative = function() {
 			.style('display', 'none');
 	});
 }
+function MyBikeRaceDoping() {
+	this.data = null;
+	this.scatterplotGraph = null;
+	
+	d3.json('https://raw.githubusercontent.com/FreeCodeCamp/ProjectReferenceData/master/cyclist-data.json', function(error, json) {
+		if (error) {
+			console.error('Error happened reading JSON data');
+		}
+		else {
+			this.data = json;
+			this.scatterplotGraph = new MyScatterplotGraph(this.data);
+			this.scatterplotGraph.createChart();
+			this.scatterplotGraph.addYAxis();
+			this.scatterplotGraph.addXAxis();
+			this.scatterplotGraph.addCircles();
+			this.scatterplotGraph.setupBackgroundText();
+			this.scatterplotGraph.setupAuthorDrivenNarrative();
+		}
+	});
+}
+var bikeRaceDoping = new MyBikeRaceDoping();

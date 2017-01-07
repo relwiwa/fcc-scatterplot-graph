@@ -231,7 +231,9 @@ MyScatterplotGraph.prototype.startUserDrivenNarrative = function() {
 		}
 
 		var html = '<h4>' + d['Name'] + ' (' + d['Nationality'] + ')</h4>';
-		html += '<p>Time: 0:' + d['Time'] + ' (' + d['Year'] + ')';
+		html += '<p>Rank: ' + d['Place'] + '<br>';
+		html += 'Time: 0:' + d['Time'] + '<br>';
+		html += 'Year: ' + d['Year'];
 		html += '<p>' + (d['Doping'] === '' ? 'No doping allegations' : d['Doping']) + '</p>';
 		
 		that.chart.tooltip
